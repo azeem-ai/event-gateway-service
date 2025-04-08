@@ -6,12 +6,28 @@
     "scripts": {
         "build": "tsc && tsc-alias",
         "watch": "tsc -w",
+        "dev": "ts-node -r tsconfig-paths/register src/receiver/handler.ts",
+        "start:receiver": "node -r tsconfig-paths/register dist/receiver/handler.js",
+        "start:dispatcher": "node -r tsconfig-paths/register dist/dispatcher/handler.js",
         "lint": "eslint . --ext .js,.ts --max-warnings=0",
         "lint:fix": "eslint . --ext .ts,.js --fix",
         "format": "prettier --write .",
         "test": "jest --coverage",
         "test:watch": "jest --watch",
         "prepare": "husky install"
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testMatch": [
+            "**/*.test.ts"
+        ],
+        "transform": {
+            "^.+\\.tsx?$": "ts-jest"
+        },
+        "moduleNameMapper": {
+            "^@/(.*)$": "<rootDir>/src/$1"
+        }
     },
     "author": "Azeem Toor",
     "license": "MIT",
@@ -43,6 +59,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-sqs": "^3.782.0",
+        "axios": "^1.8.4",
         "dotenv": "^16.4.7",
         "winston": "^3.17.0",
         "zod": "^3.24.2"

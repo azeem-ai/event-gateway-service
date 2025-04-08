@@ -11,5 +11,6 @@ const requireEnv = (name: string): string => {
 export const config = {
     sqsQueueUrl: requireEnv('SQS_QUEUE_URL'),
     graphqlEndpoint: requireEnv('GRAPHQL_ENDPOINT'),
-    logLevel: process.env.LOG_LEVEL ?? 'info',
+    authToken: requireEnv('AUTH_TOKEN'),
+    logLevel: process.env.LOG_LEVEL ?? 'info'
 };

@@ -7,6 +7,7 @@ export const MESSAGES = {
         SQS_FAILED: 'SQS failed'
     },
     DISPATCHER: {
+        INVALID_EVENT: 'Invalid event received by dispatcher',
         START_DISPATCH: 'Dispatching event from queue',
         GRAPHQL_SUCCESS: 'Event successfully dispatched to GraphQL',
         GRAPHQL_FAIL: 'GraphQL responded with error',
