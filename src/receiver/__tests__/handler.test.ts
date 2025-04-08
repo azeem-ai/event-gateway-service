@@ -10,6 +10,8 @@ import {
     APIGatewayProxyResult,
 } from 'aws-lambda';
 import * as publisher from '@/receiver/service/sqsPublisher';
+import { MESSAGES } from '@/shared/constants/messages';
+import { HTTP_STATUS } from '@/shared/constants/httpStatus';
 
 // Mock the SQS publisher
 jest.mock('@/receiver/service/sqsPublisher');
@@ -43,8 +45,8 @@ describe('receiver.handler', () => {
             mockCallback
         ) as APIGatewayProxyResult;
 
-        expect(res.statusCode).toBe(202);
-        expect(JSON.parse(res.body)).toEqual({ message: 'Event received' });
+        expect(res.statusCode).toBe(HTTP_STATUS.ACCEPTED);
+        expect(JSON.parse(res.body)).toEqual({ message: MESSAGES.RECEIVER.EVENT_RECEIVED_SUCCESS });
     });
 
     it('returns 400 for invalid payload', async () => {
@@ -54,11 +56,11 @@ describe('receiver.handler', () => {
             mockCallback
         ) as APIGatewayProxyResult;
 
-        expect(res.statusCode).toBe(400);
+        expect(res.statusCode).toBe(HTTP_STATUS.BAD_REQUEST);
     });
 
     it('returns 500 when publishing fails', async () => {
-        mockPublish.mockRejectedValueOnce(new Error('SQS failed'));
+        mockPublish.mockRejectedValueOnce(new Error(MESSAGES.RECEIVER.SQS_FAILED));
 
         const res = await handler(
             buildEvent({
@@ -71,7 +73,7 @@ describe('receiver.handler', () => {
             mockCallback
         ) as APIGatewayProxyResult;
 
-        expect(res.statusCode).toBe(500);
-        expect(JSON.parse(res.body)).toEqual({ error: 'Internal server error' });
+        expect(res.statusCode).toBe(HTTP_STATUS.INTERNAL_ERROR);
+        expect(JSON.parse(res.body)).toEqual({ error: MESSAGES.SYSTEM.INTERNAL_SERVER_ERROR });
     });
 });

@@ -1,6 +1,7 @@
 import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import { config } from '@/shared';
 import logger from '@/shared/utils/logger';
+import { MESSAGES } from '@/shared/constants/messages';
 
 // Create and reuse one SQS client
 const sqsClient = new SQSClient({});
@@ -14,12 +15,12 @@ export const publishToQueue = async (message: object): Promise<void> => {
 
     try {
         await sqsClient.send(command);
-        logger.info('Message published to SQS', { message });
+        logger.info(MESSAGES.RECEIVER.SEND_TO_SQS_SUCCESS, { message });
     } catch (err: unknown) {
         if (err instanceof Error) {
-            logger.error('Failed to publish message to SQS', { error: err.message });
+            logger.error(MESSAGES.RECEIVER.SEND_TO_SQS_FAIL, { error: err.message });
         } else {
-            logger.error('Failed to publish message to SQS', { error: JSON.stringify(err) });
+            logger.error(MESSAGES.RECEIVER.SEND_TO_SQS_FAIL, { error: JSON.stringify(err) });
         }
         throw err;
     }
