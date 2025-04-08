@@ -47,9 +47,7 @@ export const postToGraphQL = async (event: IncomingEvent): Promise<void> => {
         throw new Error(`GraphQL returned errors: ${JSON.stringify(response.data.errors)}`);
     }
 
-    // ✅ This is now correct:
     const { id, status } = response.data.data.sendEvent;
 
-    // Optional: logging
     logger.info('GraphQL mutation succeeded', { id, status });
 };
