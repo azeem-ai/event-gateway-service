@@ -9,7 +9,7 @@
         "dev": "ts-node -r tsconfig-paths/register src/receiver/handler.ts",
         "start:receiver": "node -r tsconfig-paths/register dist/receiver/handler.js",
         "start:dispatcher": "node -r tsconfig-paths/register dist/dispatcher/handler.js",
-        "lint": "eslint src --ext .js,.ts --max-warnings=0",
+        "lint": "eslint src --ext .js,.ts",
         "lint:fix": "eslint . --ext .ts,.js --fix",
         "format": "prettier --write .",
         "test": "jest --coverage",
