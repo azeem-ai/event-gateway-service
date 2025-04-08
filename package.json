@@ -7,8 +7,8 @@
         "build": "tsc && tsc-alias",
         "watch": "tsc -w",
         "dev": "ts-node -r tsconfig-paths/register src/receiver/handler.ts",
-        "start:receiver": "node -r tsconfig-paths/register dist/receiver/handler.js",
-        "start:dispatcher": "node -r tsconfig-paths/register dist/dispatcher/handler.js",
+        "start:receiver": "node -r tsconfig-paths/register build/receiver/handler.js",
+        "start:dispatcher": "node -r tsconfig-paths/register build/dispatcher/handler.js",
         "lint": "eslint src --ext .js,.ts",
         "lint:fix": "eslint . --ext .ts,.js --fix",
         "format": "prettier --write .",
@@ -16,8 +16,8 @@
         "test:watch": "jest --watch",
         "prepare": "husky install",
         "deploy": "echo 'Handled by GitHub Actions / Terraform'",
-        "zip:receiver": "echo 'Packaging Receiver Lambda...' && mkdir -p infrastructure/lambda/receiver && cp dist/receiver/handler.js infrastructure/lambda/receiver/ && cp -r node_modules infrastructure/lambda/receiver/ && cd infrastructure/lambda/receiver && zip -r ../receiver.zip . && cd ../../../",
-        "zip:dispatcher": "echo 'Packaging Dispatcher Lambda...' && mkdir -p infrastructure/lambda/dispatcher && cp dist/dispatcher/handler.js infrastructure/lambda/dispatcher/ && cp -r node_modules infrastructure/lambda/dispatcher/ && cd infrastructure/lambda/dispatcher && zip -r ../dispatcher.zip . && cd ../../../",
+        "zip:receiver": "echo 'Packaging Receiver Lambda...' && mkdir -p infrastructure/lambda/receiver && cp build/receiver/handler.js infrastructure/lambda/receiver/ && cp -r node_modules infrastructure/lambda/receiver/ && cd infrastructure/lambda/receiver && zip -r ../receiver.zip . && cd ../../../",
+        "zip:dispatcher": "echo 'Packaging Dispatcher Lambda...' && mkdir -p infrastructure/lambda/dispatcher && cp build/dispatcher/handler.js infrastructure/lambda/dispatcher/ && cp -r node_modules infrastructure/lambda/dispatcher/ && cd infrastructure/lambda/dispatcher && zip -r ../dispatcher.zip . && cd ../../../",
         "zip:all": "npm run build && npm run zip:receiver && npm run zip:dispatcher"
     },
     "jest": {
