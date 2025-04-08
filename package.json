@@ -17,6 +17,7 @@
     "license": "MIT",
     "devDependencies": {
         "@eslint/js": "^9.24.0",
+        "@types/aws-lambda": "^8.10.148",
         "@types/jest": "^29.5.14",
         "@types/node": "^20.11.1",
         "@typescript-eslint/eslint-plugin": "^8.29.0",
@@ -41,6 +42,7 @@
         "**/*.{ts,js}": "eslint --fix"
     },
     "dependencies": {
+        "@aws-sdk/client-sqs": "^3.782.0",
         "dotenv": "^16.4.7",
         "winston": "^3.17.0",
         "zod": "^3.24.2"
