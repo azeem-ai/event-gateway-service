@@ -3,25 +3,29 @@ const { defineConfig } = require("eslint/config");
 const globals = require("globals");
 const tseslint = require("@typescript-eslint/eslint-plugin");
 const parser = require("@typescript-eslint/parser");
+const pluginSecurity = require("eslint-plugin-security");
 
-module.exports = defineConfig({
-  ignores: ["build/**/*", "coverage/**/*"],
-  files: ["**/*.{js,ts}"],
-  languageOptions: {
-    parser,
-    parserOptions: {
-      ecmaVersion: 2020,
-      sourceType: "module",
+module.exports = defineConfig([
+    pluginSecurity.configs.recommended,
+    {
+        ignores: ["build/**/*", "coverage/**/*"],
+        files: ["**/*.{js,ts}"],
+        languageOptions: {
+            parser,
+            parserOptions: {
+                ecmaVersion: 2020,
+                sourceType: "module",
+            },
+            globals: {
+                ...globals.node,
+                ...globals.jest,
+            },
+        },
+        plugins: {
+            "@typescript-eslint": tseslint,
+        },
+        rules: {
+            ...tseslint.configs.recommended.rules,
+        },
     },
-    globals: {
-      ...globals.node,
-      ...globals.jest,
-    },
-  },
-  plugins: {
-    "@typescript-eslint": tseslint,
-  },
-  rules: {
-    ...tseslint.configs.recommended.rules,
-  },
-});
+]);
