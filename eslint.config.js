@@ -8,7 +8,13 @@ const pluginSecurity = require("eslint-plugin-security");
 module.exports = defineConfig([
     pluginSecurity.configs.recommended,
     {
-        ignores: ["build/**/*", "coverage/**/*"],
+        ignores: [
+            "build/**/*",
+            "dist/**/*",
+            "coverage/**/*",
+            "node_modules/**/*",
+            "src/infrastructure/lambda/**/*",
+        ],
         files: ["**/*.{js,ts}"],
         languageOptions: {
             parser,
