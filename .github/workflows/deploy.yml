@@ -54,7 +54,7 @@ jobs:
       AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
     defaults:
       run:
-        working-directory: infra/environments/dev
+        working-directory: infrastructure/environments/dev
 
     steps:
       - name: Checkout code
