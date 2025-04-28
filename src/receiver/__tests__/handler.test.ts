@@ -1,6 +1,7 @@
 process.env.SQS_QUEUE_URL = 'https://mock-sqs-url';
 process.env.GRAPHQL_ENDPOINT = 'https://mock-graphql-endpoint';
 process.env.AUTH_TOKEN = 'mock-token';
+process.env.BRAND_NAME = 'brandName';
 
 import { handler } from '@/receiver/handler';
 import {
@@ -34,20 +35,29 @@ describe('receiver.handler', () => {
     it('returns 202 for valid event', async () => {
         mockPublish.mockResolvedValueOnce(undefined);
 
+        const inputEvent = {
+            id: '1',
+            name: 'test event',
+            body: 'test body',
+            timestamp: new Date().toISOString(),
+        };
+
         const res = await handler(
-            buildEvent({
-                id: '1',
-                name: 'test event',
-                body: 'test body',
-                timestamp: new Date().toISOString(),
-            }),
+            buildEvent(inputEvent),
             mockContext,
             mockCallback
         ) as APIGatewayProxyResult;
 
         expect(res.statusCode).toBe(HTTP_STATUS.ACCEPTED);
         expect(JSON.parse(res.body)).toEqual({ message: MESSAGES.RECEIVER.EVENT_RECEIVED_SUCCESS });
+
+        // Verify the event enrichment
+        expect(mockPublish).toHaveBeenCalledWith(expect.objectContaining({
+            ...inputEvent,
+            brand: process.env.BRAND_NAME,
+        }));
     });
+
 
     it('returns 400 for invalid payload', async () => {
         const res = await handler(

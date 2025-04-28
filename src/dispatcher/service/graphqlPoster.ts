@@ -1,8 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
-import { IncomingEvent, config } from '@/shared';
+import { EnrichedEvent, config } from '@/shared';
 import logger from '@/shared/utils/logger';
 
-// Define the GraphQL mutation for sending the event
+// Define the GraphQL mutation to send event details
 const GRAPHQL_MUTATION = `
     mutation SendEvent($input: EventInput!) {
         sendEvent(input: $input) {
@@ -20,13 +20,20 @@ type SendEventResponseData = {
     };
 };
 
+// Complete GraphQL API response type including possible errors
 type GraphQLSuccessResponse = {
     data: SendEventResponseData;
     errors?: Array<{ message: string; extensions?: unknown }>;
 };
 
-// Posts a validated event to the GraphQL API
-export const postToGraphQL = async (event: IncomingEvent): Promise<void> => {
+
+/**
+ * Posts an enriched event to the GraphQL API.
+ * @param {EnrichedEvent} event The validated event to send.
+ * @return {Promise<void>} Resolves when the event is successfully posted.
+ * @throws Throws if GraphQL returns errors or the network request fails.
+ */
+export const postToGraphQL = async (event: EnrichedEvent): Promise<void> => {
     const response: AxiosResponse<GraphQLSuccessResponse> = await axios.post(
         config.graphqlEndpoint,
         {
