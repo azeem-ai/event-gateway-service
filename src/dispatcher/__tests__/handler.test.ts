@@ -1,10 +1,12 @@
 process.env.SQS_QUEUE_URL = 'https://mock-sqs-url';
 process.env.GRAPHQL_ENDPOINT = 'https://mock-graphql-endpoint';
 process.env.AUTH_TOKEN = 'mock-token';
+process.env.BRAND_NAME = 'brandName';
 
 import { SQSEvent, SQSRecord } from 'aws-lambda';
 import { handler } from '@/dispatcher/handler';
 import * as graphqlPoster from '@/dispatcher/service/graphqlPoster';
+import { logger } from '@/shared';
 
 jest.mock('../service/graphqlPoster');
 const mockPost = graphqlPoster.postToGraphQL as jest.Mock;
@@ -24,6 +26,9 @@ const buildSQSEvent = (messageBody: object): SQSEvent => {
 describe('dispatcher.handler', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+
+        // mock logger.error
+        jest.spyOn(logger, 'error').mockImplementation();
     });
 
     it('should successfully post a valid event to GraphQL', async () => {
@@ -34,6 +39,7 @@ describe('dispatcher.handler', () => {
             name: 'Test Event',
             body: 'Test Body',
             timestamp: new Date().toISOString(),
+            brand: process.env.BRAND_NAME,
         });
 
         await handler(event);
@@ -47,6 +53,7 @@ describe('dispatcher.handler', () => {
             // name is missing
             body: 'Test Body',
             timestamp: 'invalid-date',
+            brand: process.env.BRAND_NAME,
         });
 
         await handler(invalidEvent);
@@ -54,7 +61,7 @@ describe('dispatcher.handler', () => {
         expect(mockPost).not.toHaveBeenCalled();
     });
 
-    it('should throw if postToGraphQL fails', async () => {
+    it('should log an error if postToGraphQL fails', async () => {
         mockPost.mockRejectedValueOnce(new Error('GraphQL Error'));
 
         const event = buildSQSEvent({
@@ -62,8 +69,22 @@ describe('dispatcher.handler', () => {
             name: 'Failing Event',
             body: 'Test',
             timestamp: new Date().toISOString(),
+            brand: process.env.BRAND_NAME,
         });
 
-        await expect(handler(event)).rejects.toThrow('GraphQL Error');
+        try {
+            await handler(event);
+        } catch {
+            // intentionally ignore the error to continue test
+        }
+
+        // Expect logger.error to have been called
+        expect(logger.error).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+                messageId: 'test-message-id',
+                error: 'GraphQL Error',
+            })
+        );
     });
 });

@@ -3,7 +3,12 @@ import { config } from '@/shared';
 import logger from '@/shared/utils/logger';
 import { MESSAGES } from '@/shared/constants/messages';
 
-// Create and reuse one SQS client
+/**
+ * Processes incoming HTTP events and publishes to AWS SQS.
+ * @param {APIGatewayProxyEvent} event The incoming HTTP request event.
+ * @return {Promise<APIGatewayProxyResult>} The HTTP response for API Gateway.
+ * @throws Throws if validation or SQS publishing fails.
+ */
 const sqsClient = new SQSClient({});
 
 // Sends a message to the SQS queue

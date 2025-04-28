@@ -2,6 +2,7 @@ export const MESSAGES = {
     RECEIVER: {
         INVALID_PAYLOAD: 'Invalid payload',
         EVENT_RECEIVED_SUCCESS: 'Event received',
+        ENRICHED_EVENT_INVALID: 'Invalid enriched event',
         SEND_TO_SQS_SUCCESS: 'Event successfully published to SQS',
         SEND_TO_SQS_FAIL: 'Failed to publish event to SQS',
         SQS_FAILED: 'SQS failed'
